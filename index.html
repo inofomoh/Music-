@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legendary Music AI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      transition: background 1s ease-in-out;
+      animation: pulse-bg 10s infinite alternate;
+      background-size: 400% 400%;
+    }
+    @keyframes pulse-bg {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: #fff;
+      color: #000;
+    }
+    input, textarea {
+      width: 90%;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎤 Legendary Music AI Generator</h1>
+  <label for="styleSelect">Choose Music Style:</label>
+  <select id="styleSelect" onchange="selectStyle(this.value)">
+    <option value="Afrobeat">Afrobeat</option>
+    <option value="Trap">Trap</option>
+    <option value="Pop">Pop</option>
+    <option value="Drill">Drill</option>
+    <option value="Amapiano">Amapiano</option>
+    <option value="RnB">RnB</option>
+  </select>
+  <p id="selectedStyle">🎵 Selected Style: Afrobeat</p>
+
+  <textarea id="lyricsInput" rows="4" placeholder="Type your lyrics here..."></textarea><br/>
+  <input type="file" accept="video/*" /><br/>
+  <input type="file" accept="image/*" /><br/>
+
+  <button onclick="generateFullMusic()">🎼 Generate Full Music</button>
+  <button onclick="editMusic()">🎚️ Edit Beat Live (Coming Soon)</button>
+  <button onclick="syncVisualizer()">🎥 Add Video Visualizer (Coming Soon)</button>
+
+  <div id="fullMusicResult"></div>
+
+  <script>
+    let currentStyle = "Afrobeat";
+    const BASE_URL = "https://your-api-endpoint.com"; // Replace with your backend
+
+    function selectStyle(style) {
+      currentStyle = style;
+      document.getElementById('selectedStyle').innerText = `🎵 Selected Style: ${style}`;
+
+      let bg;
+      switch (style) {
+        case "Afrobeat":
+          bg = "linear-gradient(270deg, #FF6B6B, #FFD93D)";
+          break;
+        case "Trap":
+          bg = "linear-gradient(270deg, #2C3E50, #4CA1AF)";
+          break;
+        case "Pop":
+          bg = "linear-gradient(270deg, #A1FFCE, #FAFFD1)";
+          break;
+        case "Drill":
+          bg = "linear-gradient(270deg, #141E30, #243B55)";
+          break;
+        case "Amapiano":
+          bg = "linear-gradient(270deg, #FDC830, #F37335)";
+          break;
+        case "RnB":
+          bg = "linear-gradient(270deg, #8E2DE2, #4A00E0)";
+          break;
+        default:
+          bg = "linear-gradient(270deg, #111, #333)";
+      }
+      document.body.style.background = bg;
+    }
+
+    async function generateFullMusic() {
+      const lyrics = document.getElementById("lyricsInput").value;
+      const style = currentStyle || "Afrobeat";
+
+      const res = await fetch(`${BASE_URL}/ai/music`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lyrics, style })
+      });
+
+      const { beat, voice } = await res.json();
+      document.getElementById("fullMusicResult").innerHTML = `
+        <h3>AI Music Output</h3>
+        <p>🎶 Beat:</p><audio controls src="${beat}"></audio>
+        <p>🗣️ Voice:</p><audio controls src="${voice}"></audio>
+      `;
+    }
+
+    function editMusic() {
+      alert("Live beat editing coming soon...");
+    }
+
+    function syncVisualizer() {
+      alert("Video visualizer feature coming soon...");
+    }
+  </script>
+</body>
+</html>
